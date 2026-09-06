@@ -1,6 +1,9 @@
 //! The parsed record of one completed element.
 
-use crate::types::{Edge, Node};
+use crate::types::{
+    Edge,
+    Node,
+};
 
 /// One completed `<node>` or `<edge>`.
 #[derive(Debug, Clone, PartialEq, Eq)]

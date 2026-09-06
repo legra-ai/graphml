@@ -4,9 +4,17 @@
 //! maps field-for-field so a streaming import pipeline can hand the
 //! parser's output straight to any consumer of `PgNode` / `PgEdge`.
 
-use property_graph_model::{PgEdge, PgNode, PgProperty};
+use property_graph_model::{
+    PgEdge,
+    PgNode,
+    PgProperty,
+};
 
-use crate::types::{Edge, Node, Property};
+use crate::types::{
+    Edge,
+    Node,
+    Property,
+};
 
 impl From<Property> for PgProperty {
     fn from(property: Property) -> Self {
@@ -41,7 +49,10 @@ impl From<Edge> for PgEdge {
 
 #[cfg(test)]
 mod tests {
-    use property_graph_model::{PgEdge, PgNode};
+    use property_graph_model::{
+        PgEdge,
+        PgNode,
+    };
 
     use crate::parse_graphml;
 
