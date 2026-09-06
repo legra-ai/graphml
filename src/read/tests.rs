@@ -1,5 +1,9 @@
 use crate::error::GraphmlError;
-use crate::read::{GraphmlReader, GraphmlRecord, parse_graphml};
+use crate::read::{
+    GraphmlReader,
+    GraphmlRecord,
+    parse_graphml,
+};
 
 const NEO4J_EXPORT: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns">

@@ -3,7 +3,10 @@
 use crate::error::GraphmlError;
 use crate::read::record::GraphmlRecord;
 use crate::read::sync_reader::GraphmlReader;
-use crate::types::{Edge, Node};
+use crate::types::{
+    Edge,
+    Node,
+};
 
 /// Parse a complete GraphML document, invoking `on_node` / `on_edge`
 /// for each record as it completes.

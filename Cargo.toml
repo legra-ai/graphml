@@ -6,6 +6,7 @@ authors = ["DataRoad Inc, Delaware, USA, trading as Legra"]
 edition = "2024"
 rust-version = "1.97.1"
 license = "MIT OR Apache-2.0"
+documentation = "https://docs.rs/graphml"
 readme = "README.md"
 repository = "https://github.com/legra-ai/graphml"
 keywords = ["graphml", "xml", "property-graph", "parser", "streaming"]
@@ -18,6 +19,7 @@ include = [
     "README.md",
     "LICENSE-*",
     "build.rs",
+    "tests/**/*.rs",
 ]
 
 [lib]

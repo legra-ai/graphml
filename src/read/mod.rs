@@ -13,6 +13,9 @@ mod tests;
 
 #[cfg(feature = "tokio")]
 pub use async_reader::AsyncGraphmlReader;
-pub use entry::{parse_graphml, parse_graphml_with};
+pub use entry::{
+    parse_graphml,
+    parse_graphml_with,
+};
 pub use record::GraphmlRecord;
 pub use sync_reader::GraphmlReader;

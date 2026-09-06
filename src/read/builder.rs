@@ -3,12 +3,23 @@
 //! `</edge>`. Memory is bounded by the key table plus one open element.
 
 use quick_xml::escape::resolve_predefined_entity;
-use quick_xml::events::{BytesStart, Event};
+use quick_xml::events::{
+    BytesStart,
+    Event,
+};
 
 use crate::error::GraphmlError;
-use crate::key::{KeyDecl, Keys, split_labels};
+use crate::key::{
+    KeyDecl,
+    Keys,
+    split_labels,
+};
 use crate::read::record::GraphmlRecord;
-use crate::types::{Edge, Node, Property};
+use crate::types::{
+    Edge,
+    Node,
+    Property,
+};
 
 /// The element currently being assembled.
 #[derive(Debug)]
