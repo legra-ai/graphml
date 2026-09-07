@@ -42,9 +42,12 @@ dependencies = [
 
 [[package]]
 name = "property-graph-model"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83f55e0778b6d85bb10d7bd08e7db0653f123659a57c42b5bc7ecaef7a24c688"
+checksum = "ec2b1f6ef47882c86bd9b9ea7c7d993e06d4071aa258cf35e9daa24bb8d9a6c6"
+dependencies = [
+ "rhusky",
+]
 
 [[package]]
 name = "quick-xml"
