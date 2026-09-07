@@ -1,6 +1,6 @@
 [package]
 name = "graphml"
-version = "0.1.0"
+version = "0.1.1"
 description = "Streaming GraphML parser producing owned property-graph nodes and edges, with optional Tokio async reading"
 authors = ["DataRoad Inc, Delaware, USA, trading as Legra"]
 edition = "2024"
