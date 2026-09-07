@@ -2,6 +2,7 @@
 //! `<key>` declarations, and completes one record per `</node>` or
 //! `</edge>`. Memory is bounded by the key table plus one open element.
 
+use quick_xml::XmlVersion;
 use quick_xml::escape::resolve_predefined_entity;
 use quick_xml::events::{
     BytesStart,
@@ -122,15 +123,12 @@ impl Builder {
             Event::Empty(start) => self.start(start, position, true),
             Event::End(end) => self.end(end.local_name().as_ref(), position),
             Event::Text(text) if self.data_key.is_some() => {
-                let text = text.xml_content().map_err(|e| GraphmlError::Xml {
-                    position,
-                    detail: e.to_string(),
-                })?;
-                self.text.push_str(&text);
+                self.text.push_str(&text.xml_content(XmlVersion::default()));
                 Ok(None)
             }
             Event::CData(cdata) if self.data_key.is_some() => {
-                self.text.push_str(&String::from_utf8_lossy(cdata));
+                self.text
+                    .push_str(&cdata.xml_content(XmlVersion::default()));
                 Ok(None)
             }
             Event::GeneralRef(reference) if self.data_key.is_some() => {
@@ -141,10 +139,7 @@ impl Builder {
                     self.text.push(ch);
                     return Ok(None);
                 }
-                let name = reference.xml_content().map_err(|e| GraphmlError::Xml {
-                    position,
-                    detail: e.to_string(),
-                })?;
+                let name = reference.xml_content(XmlVersion::default());
                 let entity = resolve_predefined_entity(&name).ok_or_else(|| GraphmlError::Xml {
                     position,
                     detail: format!("unknown entity reference &{name};"),
@@ -172,7 +167,7 @@ impl Builder {
         empty: bool,
     ) -> Result<Option<GraphmlRecord>, GraphmlError> {
         match start.local_name().as_ref() {
-            b"key" => {
+            "key" => {
                 let id = required(start, "key", "id", position)?;
                 let decl = KeyDecl::new(
                     &id,
@@ -183,11 +178,11 @@ impl Builder {
                 self.keys.insert(id, decl);
                 Ok(None)
             }
-            b"graph" if self.open.is_some() => {
+            "graph" if self.open.is_some() => {
                 self.nested_graph_depth += 1;
                 Ok(None)
             }
-            b"node" if self.open.is_none() => {
+            "node" if self.open.is_none() => {
                 let id = required(start, "node", "id", position)?;
                 self.open = Some(Open::Node {
                     id,
@@ -196,7 +191,7 @@ impl Builder {
                 });
                 if empty { self.close() } else { Ok(None) }
             }
-            b"edge" if self.open.is_none() => {
+            "edge" if self.open.is_none() => {
                 self.open = Some(Open::Edge {
                     id: attribute(start, "id")?,
                     source: required(start, "edge", "source", position)?,
@@ -206,7 +201,7 @@ impl Builder {
                 });
                 if empty { self.close() } else { Ok(None) }
             }
-            b"data" if self.nested_graph_depth == 0 => {
+            "data" if self.nested_graph_depth == 0 => {
                 if self.open.is_none() {
                     return Err(GraphmlError::DataOutsideElement { position });
                 }
@@ -227,19 +222,17 @@ impl Builder {
         }
     }
 
-    fn end(&mut self, name: &[u8], _position: u64) -> Result<Option<GraphmlRecord>, GraphmlError> {
+    fn end(&mut self, name: &str, _position: u64) -> Result<Option<GraphmlRecord>, GraphmlError> {
         match name {
-            b"data" if self.data_key.is_some() => {
+            "data" if self.data_key.is_some() => {
                 self.end_data();
                 Ok(None)
             }
-            b"graph" if self.nested_graph_depth > 0 => {
+            "graph" if self.nested_graph_depth > 0 => {
                 self.nested_graph_depth -= 1;
                 Ok(None)
             }
-            b"node" | b"edge" if self.open.is_some() && self.nested_graph_depth == 0 => {
-                self.close()
-            }
+            "node" | "edge" if self.open.is_some() && self.nested_graph_depth == 0 => self.close(),
             _ => Ok(None),
         }
     }
@@ -267,7 +260,7 @@ fn attribute(start: &BytesStart<'_>, name: &str) -> Result<Option<String>, Graph
             detail: e.to_string(),
         })?
         .map(|attr| {
-            attr.unescape_value()
+            attr.normalized_value(XmlVersion::default())
                 .map(std::borrow::Cow::into_owned)
                 .map_err(|e| GraphmlError::Xml {
                     position: 0,
