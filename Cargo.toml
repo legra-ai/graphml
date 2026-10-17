@@ -17,9 +17,11 @@ include = [
     "src/**",
     "Cargo.toml",
     "README.md",
-    "LICENSE-*",
     "build.rs",
-    "tests/**/*.rs",
+    "tests/**",
+    "Cargo.lock",
+    "LICENSE-MIT",
+    "LICENSE-APACHE",
 ]
 
 [lib]
@@ -42,7 +44,7 @@ tokio = ["dep:tokio", "quick-xml/async-tokio"]
 tokio = { version = "1", features = ["io-util", "macros", "rt"] }
 
 [build-dependencies]
-rhusky = "0.0.6"
+rhusky = "2.0.1"
 
 [lints.rust]
 missing_docs = "deny"
