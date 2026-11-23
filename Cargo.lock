@@ -79,7 +79,7 @@ dependencies = [
 
 [[package]]
 name = "graphml"
-version = "0.1.17"
+version = "0.1.18"
 dependencies = [
  "property-graph-model",
  "quick-xml",
